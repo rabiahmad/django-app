@@ -1,0 +1,15 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+    {% for promo in promotions %}
+    <button type="button" class="collapsible" onclick="toggle_collapse()">{{promo.id}}</button>
+    <div class="content">
+        <p>Start: {{ promo.start_date }}</p>
+        <p>End: {{ promo.end_date }}</p>
+        <p>Promotion type: {{ promo.promotion_type }}</p>
+        <p>Discount: {{ promo.discount }}</p>
+        <p>{{ promo.text|linebreaksbr }}</p>
+        <button type="button" class="btn btn-primary">Apply promotion</button>
+    </div>
+    <br>
+    {% endfor %}
+{% endblock %}

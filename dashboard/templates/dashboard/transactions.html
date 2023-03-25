@@ -1,0 +1,15 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+    {% for trans in transactions %}
+        <div class="card">
+            <h5 class="card-header">{{ trans.order_id }}</h5>
+            <div class="card-body">
+                <article class="transaction">
+                    <time class="date"> order date: {{ trans.order_date }} </time>
+                    <p>{{ trans.text|linebreaksbr }}</p>
+                </article>
+                <button type="button" class="btn btn-primary">View details</button>
+            </div>
+        </div><br>
+    {% endfor %}
+{% endblock %}
