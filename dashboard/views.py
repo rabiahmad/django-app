@@ -6,7 +6,7 @@ from django.db.models import Sum
 
 
 def index(request):
-    return render(request, "dashboard/dashboard.html")
+    return render(request, "dashboard/index.html")
 
 
 def promotions(request):
@@ -30,4 +30,4 @@ def total_sales(request):
     total_sales_agg = Transaction.objects.aggregate(Sum("sales"))
     total_sales = "${:,}".format(int(total_sales_agg["sales__sum"]))
     context = {"total_sales": total_sales}
-    return render(request, "dashboard/dashboard.html", context)
+    return render(request, "dashboard/index.html", context)
