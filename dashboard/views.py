@@ -27,5 +27,7 @@ def overview(request):
 
 def total_sales(request):
     """Get transactions data from database and calculate total sales"""
-    total_sales = Transaction.objects.aggregate(Sum("price"))
-    return JsonResponse({"total_sales": total_sales})
+    total_sales_agg = Transaction.objects.aggregate(Sum("sales"))
+    total_sales = "${:,}".format(int(total_sales_agg["sales__sum"]))
+    context = {"total_sales": total_sales}
+    return render(request, "dashboard/dashboard.html", context)
