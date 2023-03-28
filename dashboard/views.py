@@ -8,6 +8,15 @@ from django.db.models import Sum
 def index(request):
     return render(request, "dashboard/index.html")
 
+def tables(request):
+    return render(request, "dashboard/tables.html")
+
+def buttons(request):
+    return render(request, "dashboard/buttons.html")
+
+def cards(request):
+    return render(request, "dashboard/cards.html")
+
 
 def promotions(request):
     promotions = Promotion.objects.all().order_by("start_date")
