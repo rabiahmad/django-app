@@ -2,17 +2,39 @@ from django.shortcuts import render
 from django.utils import timezone
 from dashboard.models import Promotion, Transaction
 from django.http import HttpResponse, JsonResponse
-from django.db.models import Sum
+from django.db.models import Sum, Count
+from django.views.generic import TemplateView
 
 
-def index(request):
-    return render(request, "dashboard/index.html")
+class DashboardView(TemplateView):
+    template_name = "dashboard/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["total_sales"] = self._total_sales()
+        context["total_orders"] = self._total_orders()
+        return context
+
+    def _total_sales(self):
+        """ Get transactions data from database and calculate total sales """
+        total_sales_agg = Transaction.objects.aggregate(Sum("sales"))
+        total_sales = "${:,}".format(int(total_sales_agg["sales__sum"]))
+        return total_sales
+    
+    def _total_orders(self):
+        """ Get total number of orders from transactions dataset """
+        total_orders_agg = Transaction.objects.aggregate(Count("order_id"))
+        total_orders = int(total_orders_agg["order_id__count"])
+        return total_orders
+    
 
 def tables(request):
     return render(request, "dashboard/tables.html")
 
+
 def buttons(request):
     return render(request, "dashboard/buttons.html")
+
 
 def cards(request):
     return render(request, "dashboard/cards.html")
@@ -32,11 +54,3 @@ def transactions(request):
 
 def overview(request):
     return render(request, "dashboard/overview.html")
-
-
-def total_sales(request):
-    """Get transactions data from database and calculate total sales"""
-    total_sales_agg = Transaction.objects.aggregate(Sum("sales"))
-    total_sales = "${:,}".format(int(total_sales_agg["sales__sum"]))
-    context = {"total_sales": total_sales}
-    return render(request, "dashboard/index.html", context)
