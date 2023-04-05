@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Overview
+{% endblock title %}
 {% block content %}
-    <!-- Begin Page Content -->
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-        <a href="#"
-           class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-    </div>
     <!-- Content Row -->
     <div class="row">
         <!-- Earnings (Monthly) Card Example -->
@@ -121,7 +118,7 @@
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="chart-area">
-                        <canvas id="myAreaChart"></canvas>
+                        <canvas id="monthlySalesAreaChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -155,18 +152,14 @@
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
+                        <canvas id="salesByCategorPieChart"></canvas>
                     </div>
                     <div class="mt-4 text-center small">
+                        {% comment %} {% for category in category_sales.labels %}
                         <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Direct
+                            <i class="fas fa-circle text-primary"></i> {{ category }}
                         </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Social
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Referral
-                        </span>
+                        {% endfor %} {% endcomment %}
                     </div>
                 </div>
             </div>
@@ -373,4 +366,20 @@
             </div>
         </div>
     </div>
+{% endblock content %}
+<!-- Page level plugins and scripts -->
+{% block scripts %}
+    <!-- Demo scripts -->
+    <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+    <!-- Custom scripts -->
+    <script src="{% static 'js/chart-monthly-sales.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Area chart -->
+    <script type="text/javascript" src={% static "js/chart-monthly-sales.js" %}></script>
+    <script> monthly_sales_area_chart(labels={{monthly_sales.labels|safe}}, data={{monthly_sales.data|safe}}) </script>
+    <!-- Pie chart -->
+    <script type="text/javascript" src={% static "js/chart-pie-category-sales.js" %}></script>
+    <script> sales_by_category_pie(labels={{category_sales.labels|safe}}, data={{category_sales.data|safe}}) </script>
 {% endblock %}

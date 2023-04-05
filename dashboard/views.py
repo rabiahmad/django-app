@@ -1,10 +1,15 @@
 from django.shortcuts import render
 from django.utils import timezone
-from dashboard.models import Promotion, Transaction
+from dashboard.models import Transaction
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Sum, Count
 from django.views.generic import TemplateView
 
+import logging
+
+from datetime import datetime, date
+import pandas as pd
+import calendar
 
 class DashboardView(TemplateView):
     template_name = "dashboard/index.html"
@@ -13,6 +18,8 @@ class DashboardView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["total_sales"] = self._total_sales()
         context["total_orders"] = self._total_orders()
+        context["monthly_sales"] = self._monthly_sales_by_date()
+        context["category_sales"] = self._sales_by_category()
         return context
 
     def _total_sales(self):
@@ -27,6 +34,60 @@ class DashboardView(TemplateView):
         total_orders = int(total_orders_agg["order_id__count"])
         return total_orders
     
+    def _monthly_sales_by_date(self):
+        """ Get sum of sales by order date for chart """
+        labels = []
+        data = []
+
+        df = pd.DataFrame(list(Transaction.objects.all().values()))
+        df["month"] = pd.to_datetime(df["order_date"]).dt.month
+        df = df.groupby("month").sum().reset_index()
+
+        labels = [calendar.month_abbr[x] for x in df["month"].values]
+        data = list(df["sales"].values)
+        
+        context = {
+            "labels": labels,
+            "data": data
+        }
+        
+        return context
+        
+    def _sales_by_category(self):
+        """ Get sales by category """
+        labels = []
+        data = []
+
+        df = pd.DataFrame(list(Transaction.objects.all().values()))
+        df = df.groupby("category").sum().reset_index()
+
+        labels = list(df["category"].values)
+        data = list(df["sales"].values)
+        
+        context = {
+            "labels": labels,
+            "data": data
+        }
+        
+        return context
+
+# class LineChartData(APIView):
+
+#     def get(self, request, format=None):
+#         qs = Transaction.objects.filter().values("order_date").order_by("order_date").annotate(sales=Sum("sales"))
+#         labels = []
+#         data = []
+        
+#         for item in qs:
+#             labels.append(item.get("order_date"))
+#             data.append(item.get("sales"))
+        
+#         context = {
+#             "labels": labels,
+#             "data": data
+#         }
+#         return JsonResponse(context)
+    
 
 def tables(request):
     return render(request, "dashboard/tables.html")
@@ -38,11 +99,6 @@ def buttons(request):
 
 def cards(request):
     return render(request, "dashboard/cards.html")
-
-
-def promotions(request):
-    promotions = Promotion.objects.all().order_by("start_date")
-    return render(request, "dashboard/promotions.html", {"promotions": promotions})
 
 
 def transactions(request):
