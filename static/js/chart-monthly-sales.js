@@ -31,13 +31,13 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 function monthly_sales_area_chart(labels, data) {
     var ctx = document.getElementById("monthlySalesAreaChart");
     var myLineChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
           labels: labels,
           datasets: [{
             label: "Sales",
             lineTension: 0.3,
-            backgroundColor: "#4E73DF",
+            backgroundColor: "rgba(78, 115, 223, 0.9)",
             borderColor: "rgba(78, 115, 223, 1)",
             pointRadius: 3,
             pointBackgroundColor: "rgba(78, 115, 223, 1)",
@@ -46,7 +46,8 @@ function monthly_sales_area_chart(labels, data) {
             pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
             pointHoverBorderColor: "rgba(78, 115, 223, 1)",
             pointHitRadius: 10,
-            pointBorderWidth: 2,
+            pointBorderWidth: 1,
+            fill: true,
             data: data,
           }],
         },
@@ -91,8 +92,10 @@ function monthly_sales_area_chart(labels, data) {
               }
             }],
           },
-          legend: {
-            display: false
+          plugins: {
+            legend: {
+                display: false
+            },
           },
           tooltips: {
             backgroundColor: "rgb(255,255,255)",

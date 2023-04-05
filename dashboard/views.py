@@ -90,3 +90,8 @@ def transactions(request):
 
 def overview(request):
     return render(request, "dashboard/overview.html")
+
+
+def login(request):
+    return render(request, "dashboard/login.html")
+
