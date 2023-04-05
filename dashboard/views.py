@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.utils import timezone
 from dashboard.models import Transaction
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Sum, Count
@@ -13,7 +12,7 @@ import calendar
 
 
 class DashboardView(TemplateView):
-    template_name = "dashboard/index.html"
+    template_name = "dashboard/home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -90,8 +89,3 @@ def transactions(request):
 
 def overview(request):
     return render(request, "dashboard/overview.html")
-
-
-def login(request):
-    return render(request, "dashboard/login.html")
-
