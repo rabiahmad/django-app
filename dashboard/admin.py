@@ -1,5 +1,4 @@
 from django.contrib import admin
-from .models import Promotion, Transaction
+from .models import Transaction
 
-admin.site.register(Promotion)
 admin.site.register(Transaction)
