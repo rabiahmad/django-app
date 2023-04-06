@@ -333,7 +333,7 @@
                     <div class="text-center">
                         <img class="img-fluid px-3 px-sm-4 mt-3 mb-4"
                              style="width: 25rem"
-                             src="img/undraw_posting_photo.svg"
+                             src="{% static 'img/undraw_posting_photo.svg' %}"
                              alt="...">
                     </div>
                     <p>
@@ -375,7 +375,7 @@
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
     <!-- Custom scripts -->
     <script src="{% static 'js/chart-monthly-sales.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <!-- Area chart -->
     <script type="text/javascript" src={% static "js/chart-monthly-sales.js" %}></script>
     <script> monthly_sales_area_chart(labels={{monthly_sales.labels|safe}}, data={{monthly_sales.data|safe}}) </script>
