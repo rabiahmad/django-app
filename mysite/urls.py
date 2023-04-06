@@ -21,8 +21,10 @@ app_name = 'mysite'
 
 urlpatterns = [
     path('', views.login_user, name='login'),
-    path('', include('django.contrib.auth.urls')),
-    path('dashboard/', include('dashboard.urls')),
-    path('admin/', admin.site.urls),
-    path('register/', views.register_user, name='register'),
+    # path('', include('django.contrib.auth.urls')),
+    path('dashboard', include('dashboard.urls')),
+    path('admin', admin.site.urls),
+    path('register', views.register_user, name='register'),
+    path('login', views.login_user, name="login"),
+    path('logout', views.logout_user, name="logout"),
 ]

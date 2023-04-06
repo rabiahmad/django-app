@@ -4,6 +4,7 @@
     Overview
 {% endblock heading %}
 {% block content %}
+{% if user.is_authenticated %}
     <!-- Content Row -->
     <div class="row">
         <!-- Earnings (Monthly) Card Example -->
@@ -366,6 +367,9 @@
             </div>
         </div>
     </div>
+    {% else %}
+<h1>Please log in to view this page.</h1>
+{% endif %}
 {% endblock content %}
 <!-- Page level plugins and scripts -->
 {% block scripts %}
@@ -382,4 +386,5 @@
     <!-- Pie chart -->
     <script type="text/javascript" src={% static "js/chart-pie-category-sales.js" %}></script>
     <script> sales_by_category_pie(labels={{category_sales.labels|safe}}, data={{category_sales.data|safe}}) </script>
+
 {% endblock %}

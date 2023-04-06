@@ -1,13 +1,48 @@
-from django.shortcuts import render
-from dashboard.models import Transaction
-from django.http import HttpResponse, JsonResponse
-from django.db.models import Sum, Count
-from django.views.generic import TemplateView
+from django.shortcuts import render, redirect
+from .forms import LoginForm
+from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
 
 
 def login_user(request):
-    return render(request, "registration/login.html")
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("dashboard:home")
+        else:
+            messages.success(
+                request, ("Incorrect username or password. Please try again.")
+            )
+            return redirect("login")
+
+    else:
+        return render(request, "registration/login.html", {})
+
+
+def logout_user(request):
+    logout(request)
+    messages.success(
+                request, ("You have been logged out.")
+            )
+    return redirect("login")
 
 
 def register_user(request):
-    return render(request, "registration/register.html")
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password1"]
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            messages.success(request, ("Registration successful!"))
+            return redirect("dashboard:home")
+    else:
+        form = UserCreationForm()
+    
+    return render(request, "registration/register.html", {"form": form})
